@@ -69,6 +69,11 @@ products.forEach((product) => {
               quantity: 1
             })
           }
+          let cartQuantitiy=0;
+          cart.forEach((item)=>{
+            cartQuantitiy+=item.quantity;
+          });
+            document.querySelector('.js-cart-quantity').innerHTML=cartQuantitiy;
             console.log(cart);
           });
         });
