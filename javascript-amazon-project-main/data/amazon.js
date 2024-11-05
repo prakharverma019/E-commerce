@@ -1,25 +1,25 @@
-let generateHTML='';
+import { cart, addToCart } from '../data/cart.js';
+import { products } from '../data/products.js';
+let generateHTML = '';
 products.forEach((product) => {
-    generateHTML += `<div class="product-container">
-          <div class="product-image-container">
-            <img class="product-image"
-              src=${product.image}>
-          </div>
-
-          <div class="product-name limit-text-to-2-lines">
+  generateHTML += `<div class="product-container">
+    <div class="product-image-container">
+        <img class="product-image" src=${product.image}>
+    </div>
+        <div class="product-name limit-text-to-2-lines">
             ${product.name}
-          </div>
+        </div>
 
-          <div class="product-rating-container">
+        <div class="product-rating-container">
             <img class="product-rating-stars"
-              src="images/ratings/rating-${product.rating.stars*10}.png">
+              src="images/ratings/rating-${product.rating.stars * 10}.png">
             <div class="product-rating-count link-primary">
               ${product.rating.count}
             </div>
-          </div>
+         </div>
 
           <div class="product-price">
-            $${(product.priceCents/100).toFixed(2)}
+            $${(product.priceCents / 100).toFixed(2)}
           </div>
 
           <div class="product-quantity-container">
@@ -39,7 +39,7 @@ products.forEach((product) => {
 
           <div class="product-spacer"></div>
 
-          <div class="added-to-cart">
+          <div class="added-to-cart js-added-to-cart-${product.id}">
             <img src="images/icons/checkmark.png">
             Added
           </div>
@@ -48,35 +48,30 @@ products.forEach((product) => {
             Add to Cart
           </button>
         </div>`
-        
-       document.querySelector('.products-grid').innerHTML = generateHTML;   
 
-        document.querySelectorAll('.js-add-to-cart-button')
-        .forEach((button)=> {
-          button.addEventListener('click', ()=>{
-            const productId = button.dataset.productId;
-            let matchingItem;
-            cart.forEach((item)=>{
-              if(productId===item.productId){
-                matchingItem=item;
-              }
-            })
-            const quantity = Number(document.querySelector(`.js-quantity-selector-${productId}`).value);
-            /*const quantity = Number(quantitySelector.value);*/
-            if(matchingItem){
-              matchingItem.quantity += quantity;
-            } else{
-            cart.push({
-              productId: productId,
-              quantity: quantity
-            })
-          }
-          let cartQuantitiy=0;
-          cart.forEach((item)=>{
-            cartQuantitiy+=item.quantity;
-          });
-            document.querySelector('.js-cart-quantity').innerHTML=cartQuantitiy;
-            console.log(cart);
-          });
-        });
+  document.querySelector('.products-grid').innerHTML = generateHTML;
+
+  
+  
+  function updateCartQuantity() {
+      let cartQuantitiy = 0;
+      cart.forEach((cartItem) => {
+        cartQuantitiy += cartItem.quantity;
+        document.querySelector('.js-cart-quantity').innerHTML = cartQuantitiy;
+      });
+  }
+  document.querySelectorAll('.js-add-to-cart-button')
+    .forEach((button) => {
+      button.addEventListener('click', () => {
+        const { productId } = button.dataset;
+        addToCart(productId);
+        updateCartQuantity();
+
+
+        const addedMessage = document.querySelector(`.js-added-to-cart-${productId}`);
+        addedMessage.classList.add('added-to-cart-visible');
+        setTimeout(() => { addedMessage.classList.remove('added-to-cart-visible') }, 2000)
+        console.log(cart);
+      });
+    });
 });
