@@ -134,14 +134,14 @@ cart.forEach((cartItem) => {
 }); 
 
 
+updateCartQuantity();
+
 function updateCartQuantity(link) {
   const cartQuantity = calculateCartQuantity();
  document.querySelector('.js-return-to-home-link')
   .innerHTML = `${cartQuantity} items`;
 } 
 
-
-updateCartQuantity();
 
 
 function handleQuantityUpdate(link){
@@ -162,6 +162,7 @@ function handleQuantityUpdate(link){
     const quantityLabel = document.querySelector(`.js-quantity-label-${productId}`);
     quantityLabel.innerHTML = newQuantity;
     updateCartQuantity();
+    renderPaymentSummary();
     
   }
 
